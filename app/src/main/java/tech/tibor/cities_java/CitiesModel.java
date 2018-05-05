@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CitiesModel {
@@ -59,7 +60,9 @@ public class CitiesModel {
                  return null;
             }
             Type listType = new TypeToken<ArrayList<City>>(){}.getType();
-            return new Gson().<ArrayList<City>>fromJson(json, listType);
+            List<City> list = new Gson().<ArrayList<City>>fromJson(json, listType);
+            Collections.sort(list);
+            return list;
         }
 
         @Override

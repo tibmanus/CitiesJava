@@ -2,8 +2,9 @@ package tech.tibor.cities_java;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
-public class City implements Parcelable{
+public class City implements Parcelable, Comparable<City> {
 
     String _id;
 
@@ -44,4 +45,10 @@ public class City implements Parcelable{
             return new City[size];
         }
     };
+
+    @Override
+    public int compareTo(@NonNull City o) {
+        return this.name.compareTo(o.name);
+        // TODO implement by country after
+    }
 }
