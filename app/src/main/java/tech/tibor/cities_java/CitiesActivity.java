@@ -5,7 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class CitiesActivity extends AppCompatActivity {
+import tech.tibor.cities_java.dummy.DummyContent;
+
+public class CitiesActivity
+        extends AppCompatActivity
+    implements CitiesFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +24,10 @@ public class CitiesActivity extends AppCompatActivity {
         viewModel.getLoading().observe(this, loading -> {
             Log.d("loading", "observer triggered");
         });
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }
