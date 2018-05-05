@@ -1,5 +1,6 @@
 package tech.tibor.cities_java;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -16,10 +17,19 @@ public class CitiesModel {
 
     private Resources resources;
 
-    MutableLiveData<List<City>> data = new MutableLiveData<>();
+    private MutableLiveData<List<City>> data = new MutableLiveData<>();
+
+    public LiveData<List<City>> getData() {
+        return data;
+    }
 
     private List<City> parsedData;
 
+    private MutableLiveData<Boolean> loading = new MutableLiveData<>();
+
+    public LiveData<Boolean> getLoading() {
+        return loading;
+    }
 
     CitiesModel(Resources resources) {
         this.resources = resources;
@@ -31,6 +41,7 @@ public class CitiesModel {
         @Override
         protected List<City> doInBackground(Void... voids) {
 
+            loading.postValue(true);
 
             String json = null;
             try {
@@ -53,6 +64,7 @@ public class CitiesModel {
             super.onPostExecute(result);
             parsedData = result;
             data.setValue(result);
+            loading.postValue(false);
         }
     }
 }

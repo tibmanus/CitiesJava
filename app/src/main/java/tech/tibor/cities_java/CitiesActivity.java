@@ -13,8 +13,12 @@ public class CitiesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cities);
 
         CitiesViewModel viewModel = ViewModelProviders.of(this).get(CitiesViewModel.class);
-        viewModel.cities.observe(this, cities -> {
+        viewModel.getCities().observe(this, cities -> {
             Log.d("cities", "observer triggered");
+        });
+
+        viewModel.getLoading().observe(this, loading -> {
+            Log.d("loading", "observer triggered");
         });
     }
 }
