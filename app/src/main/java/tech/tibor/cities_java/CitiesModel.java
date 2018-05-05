@@ -1,5 +1,6 @@
 package tech.tibor.cities_java;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 
@@ -14,6 +15,8 @@ import java.util.List;
 public class CitiesModel {
 
     private Resources resources;
+
+    MutableLiveData<List<City>> data = new MutableLiveData<>();
 
     private List<City> parsedData;
 
@@ -49,6 +52,7 @@ public class CitiesModel {
         protected void onPostExecute(List<City> result) {
             super.onPostExecute(result);
             parsedData = result;
+            data.setValue(result);
         }
     }
 }
