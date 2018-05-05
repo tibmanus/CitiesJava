@@ -1,11 +1,13 @@
 package tech.tibor.cities_java;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import tech.tibor.cities_java.dummy.DummyContent;
 import tech.tibor.cities_java.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,8 +26,7 @@ import java.util.List;
  */
 public class CitiesFragment extends Fragment {
 
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private CitiesRecyclerViewAdapter mListAdapter;
 
     private OnListFragmentInteractionListener mListener;
 
@@ -39,6 +41,17 @@ public class CitiesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        CitiesViewModel viewModel = ViewModelProviders.of(this).get(CitiesViewModel.class);
+        viewModel.getCities().observe(this, cities -> {
+            if (cities != null && mListAdapter != null) {
+                mListAdapter.setValues(cities);
+                mListAdapter.notifyDataSetChanged();
+            }
+        });
+
+        viewModel.getLoading().observe(this, loading -> {
+            Log.d("loading", "observer triggered");
+        });
     }
 
     @Override
@@ -46,16 +59,15 @@ public class CitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cities_list, container, false);
 
+
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new CitiesRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            mListAdapter = new CitiesRecyclerViewAdapter(new ArrayList<>(), mListener);
+            recyclerView.setAdapter(mListAdapter);
         }
         return view;
     }
@@ -89,7 +101,6 @@ public class CitiesFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(City item);
     }
 }
