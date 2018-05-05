@@ -9,24 +9,35 @@ import java.util.List;
 
 public class CitiesViewModel extends AndroidViewModel {
 
-    private LiveData<List<City>> cities;
+    private CitiesModel mModel;
+
+    private LiveData<List<City>> mCities;
 
     public LiveData<List<City>> getCities() {
-        return cities;
+        return mCities;
     }
 
-    private LiveData<Boolean> loading;
+    private LiveData<Boolean> mLoading;
 
     public LiveData<Boolean> getLoading() {
-        return loading;
+        return mLoading;
+    }
+
+    private String mSearchQuery = "";
+
+    public void setSearchQuery(String query) {
+        mSearchQuery = query;
+    }
+
+    public String getSearchQuery() {
+        return mSearchQuery;
     }
 
 
     public CitiesViewModel(@NonNull Application application) {
         super(application);
-
-        CitiesModel model = new CitiesModel(application.getResources());
-        cities = model.getData();
-        loading = model.getLoading();
+        mModel = new CitiesModel(application.getResources());
+        mCities = mModel.getData();
+        mLoading = mModel.getLoading();
     }
 }
