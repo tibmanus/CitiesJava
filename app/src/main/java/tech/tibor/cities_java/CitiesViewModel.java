@@ -9,12 +9,6 @@ import java.util.List;
 
 public class CitiesViewModel extends AndroidViewModel {
 
-    private CitiesModel model;
-
-    public CitiesModel getModel() {
-        return model;
-    }
-
     private LiveData<List<City>> cities;
 
     public LiveData<List<City>> getCities() {
@@ -31,7 +25,7 @@ public class CitiesViewModel extends AndroidViewModel {
     public CitiesViewModel(@NonNull Application application) {
         super(application);
 
-        model = new CitiesModel(application.getResources());
+        CitiesModel model = new CitiesModel(application.getResources());
         cities = model.getData();
         loading = model.getLoading();
     }
