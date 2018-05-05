@@ -36,7 +36,7 @@ public class CitiesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CitiesViewModel viewModel = ViewModelProviders.of(this).get(CitiesViewModel.class);
+        CitiesViewModel viewModel = ViewModelProviders.of(getActivity()).get(CitiesViewModel.class);
         viewModel.getCities().observe(this, cities -> {
             if (cities != null && mListAdapter != null) {
                 mListAdapter.setValues(cities);

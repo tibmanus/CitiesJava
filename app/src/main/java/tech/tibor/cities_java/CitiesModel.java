@@ -39,10 +39,13 @@ public class CitiesModel {
     class Parser extends AsyncTask<Void, Void, List<City>> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading.setValue(true);
+        }
+
+        @Override
         protected List<City> doInBackground(Void... voids) {
-
-            loading.postValue(true);
-
             String json = null;
             try {
 
@@ -65,6 +68,43 @@ public class CitiesModel {
             parsedData = result;
             data.setValue(result);
             loading.postValue(false);
+        }
+    }
+
+    public void filterFor(String query) {
+        if (query.trim().isEmpty()) {
+            data.setValue(parsedData);
+            return;
+        }
+
+        new Filter().execute(query);
+    }
+
+    class Filter extends AsyncTask<String, Void, List<City>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading.setValue(true);
+        }
+
+        @Override
+        protected List<City> doInBackground(String... strings) {
+            ArrayList<City> filteredList = new ArrayList<>();
+            for (City city : parsedData) {
+                if (city.name.equals(strings[0])) {
+                    filteredList.add(city);
+                }
+            }
+
+            return filteredList;
+        }
+
+        @Override
+        protected void onPostExecute(List<City> result) {
+            super.onPostExecute(result);
+            data.setValue(result);
+            loading.setValue(false);
         }
     }
 }

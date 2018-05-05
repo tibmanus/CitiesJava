@@ -27,6 +27,7 @@ public class CitiesViewModel extends AndroidViewModel {
 
     public void setSearchQuery(String query) {
         mSearchQuery = query;
+        mModel.filterFor(query);
     }
 
     public String getSearchQuery() {
