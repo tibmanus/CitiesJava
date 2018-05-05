@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,17 @@ public class CitiesFragment extends Fragment {
     private CitiesRecyclerViewAdapter mListAdapter;
 
     private OnListFragmentInteractionListener mListener;
+
+    private RecyclerView mList;
+
+    private ProgressBar mSpinner;
+
+    private Boolean showSpinner = true;
+
+    private void setShowSpinner(Boolean show) {
+        mSpinner.setVisibility(show ? View.VISIBLE : View.GONE);
+        mList.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -45,7 +57,9 @@ public class CitiesFragment extends Fragment {
         });
 
         viewModel.getLoading().observe(this, loading -> {
-            Log.d("loading", "observer triggered");
+            if (loading != null) {
+                setShowSpinner(loading);
+            }
         });
     }
 
@@ -54,16 +68,14 @@ public class CitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cities_list, container, false);
 
+        mList = view.findViewById(R.id.list);
+        Context context = view.getContext();
+        mList.setLayoutManager(new LinearLayoutManager(context));
+        mListAdapter = new CitiesRecyclerViewAdapter(new ArrayList<>(), mListener);
+        mList.setAdapter(mListAdapter);
 
+        mSpinner = view.findViewById(R.id.progressBar);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mListAdapter = new CitiesRecyclerViewAdapter(new ArrayList<>(), mListener);
-            recyclerView.setAdapter(mListAdapter);
-        }
         return view;
     }
 
