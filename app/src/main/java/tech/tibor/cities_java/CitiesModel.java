@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.support.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,31 +34,38 @@ public class CitiesModel {
     }
 
     CitiesModel(Resources resources) {
-        this.resources = resources;
-        new Parser().execute();
+        this(resources, null);
     }
 
-    class Parser extends AsyncTask<Void, Void, List<City>> {
+    @VisibleForTesting
+    CitiesModel(Resources resources, String json) {
+        this.resources = resources;
+        new Parser().execute(json);
+    }
+
+    class Parser extends AsyncTask<String, Void, List<City>> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loading.setValue(true);
+            loading.postValue(true);
         }
 
         @Override
-        protected List<City> doInBackground(Void... voids) {
-            String json = null;
-            try {
+        protected List<City> doInBackground(String... strings) {
+            String json = strings[0];
 
-                InputStream in_s = resources.openRawResource(R.raw.cities);
+            if (json == null) {
+                try {
+                    InputStream in_s = resources.openRawResource(R.raw.cities);
 
-                byte[] b = new byte[in_s.available()];
-                in_s.read(b);
-                json = new String(b);
-            } catch (Exception e) {
-                 e.printStackTrace();
-                 return null;
+                    byte[] b = new byte[in_s.available()];
+                    in_s.read(b);
+                    json = new String(b);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
             Type listType = new TypeToken<ArrayList<City>>(){}.getType();
             List<City> list = new Gson().<ArrayList<City>>fromJson(json, listType);

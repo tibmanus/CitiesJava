@@ -9,6 +9,11 @@ public class Coordinates implements Parcelable {
 
     Double lat;
 
+    Coordinates(Double lon, Double lat) {
+        this.lon = lon;
+        this.lat = lat;
+    }
+
     protected Coordinates(Parcel in) {
         if (in.readByte() == 0) {
             lon = null;
@@ -54,4 +59,12 @@ public class Coordinates implements Parcelable {
             return new Coordinates[size];
         }
     };
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Coordinates) {
+            Coordinates o = (Coordinates) other;
+            return lat.equals(o.lat) && lon.equals(o.lon);
+        } else return false;
+    }
 }

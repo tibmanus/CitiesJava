@@ -14,6 +14,13 @@ public class City implements Parcelable, Comparable<City> {
 
     Coordinates coord;
 
+    City(String _id, String country, String name, Coordinates coord) {
+        this._id = _id;
+        this.country = country;
+        this.name = name;
+        this.coord = coord;
+    }
+
     protected City(Parcel in) {
         _id = in.readString();
         country = in.readString();
@@ -54,5 +61,16 @@ public class City implements Parcelable, Comparable<City> {
         } else {
             return value;
         }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof City) {
+            City o = (City) other;
+            return _id.equals(o._id)
+                    && name.equals(o.name)
+                    && country.equals(o.country)
+                    && coord.equals(o.coord);
+        } else return false;
     }
 }
