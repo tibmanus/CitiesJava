@@ -48,7 +48,11 @@ public class City implements Parcelable, Comparable<City> {
 
     @Override
     public int compareTo(@NonNull City o) {
-        return this.name.compareTo(o.name);
-        // TODO implement by country after
+        int value = this.name.compareTo(o.name);
+        if (value == 0) {
+            return this.country.compareTo(o.country);
+        } else {
+            return value;
+        }
     }
 }
