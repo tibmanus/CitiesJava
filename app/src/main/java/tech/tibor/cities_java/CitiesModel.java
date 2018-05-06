@@ -95,7 +95,8 @@ public class CitiesModel {
         protected List<City> doInBackground(String... strings) {
             ArrayList<City> filteredList = new ArrayList<>();
             for (City city : parsedData) {
-                if (city.name.equals(strings[0])) {
+                if (city.name.length() >= strings[0].length()
+                        && city.name.substring(0, strings[0].length()).equals(strings[0])) {
                     filteredList.add(city);
                 }
             }
